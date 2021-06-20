@@ -10,11 +10,12 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
-
-  
+  final _formKey = GlobalKey<FormState>();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
   final AuthService _auth = AuthService();
-
-  var child;
+  bool isLoading = false;
+  //var child;
  // User user = await _auth.instance.signIn
 
 
@@ -28,60 +29,124 @@ class _SignInState extends State<SignIn> {
         title: Text('Sign in to my lame ass app'),
       ),
       body: 
-      
-      Row( 
-        children: <Widget>[
-          Container(
-            //padding: EdgeInsets.symmetric(vertical: 20, horizontal: 50),
-            child: ElevatedButton(
-              child: Text('Register'),
-              onPressed: () async {
-                dynamic result = await _auth.register();
-                if (result == null) {
-                  print('error signing in');
-                } else {
-                  print('signed in');
-                  print(result.uid);
-                }
-              },
+      Form(
+        key: _formKey,
+        child: SingleChildScrollView(
+          child: Column(children: <Widget> [
+            Padding(
+              padding: EdgeInsets.all(20),
+              child: TextFormField(
+                controller: emailController,
+                decoration: InputDecoration(
+                  labelText: "Enter Email Address",
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                ),
+                validator: (value) {
+                  if(value!.isEmpty) {
+                    return 'Enter Email Address';
+                  } else if (!value.contains('@')) {
+                    return 'Enter Email Address';
+                  }
+                  return null;
+                },
+              )
             ),
-          ),
-          Container(
-            //padding: EdgeInsets.symmetric(vertical: 20, horizontal: 50),
-            child: ElevatedButton(
-              child: Text('Sign in'),
-              onPressed: () async {
-                //dynamic result = await 
-               _auth.signInEmailPass();
-               _auth.isSignedIn();
+            Padding(
+              padding: EdgeInsets.all(20),
+              child: TextFormField(
+                controller: passwordController,
+                decoration: InputDecoration(
+                  labelText: "Enter Password",
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                ),
+                validator: (value) {
+                  if(value!.isEmpty) {
+                    return 'Enter Password';
+                  } else if (value.length < 6) {
+                    return 'Password must be 6 characters or more!';
+                  }
+                  return null;
+                },
+              )
+            ),
+            Padding (
+              padding: EdgeInsets.all(20.0),
+              child: isLoading
+                ? CircularProgressIndicator()
+                : ElevatedButton(
+                  style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.lime)),
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      setState(() {
+                        isLoading = true;
+                      });
+                      _auth.signInEmailPass();
+                    }
+                  },
+                  child: Text('Submit'),
+                )
+            )
+          ]
+          )
+        )
+      ),
+      //Row( 
+      //  children: <Widget>[
+        //  Container(
+          //  //padding: EdgeInsets.symmetric(vertical: 20, horizontal: 50),
+//            child: ElevatedButton(
+  //            child: Text('Register'),
+    //          onPressed: () async {
+      //          dynamic result = await _auth.register();
+        //        if (result == null) {
+          //        print('error signing in');
+            //    } else {
+              //    print('signed in');
+                //  print(result.uid);
+              //  }
+            //  },
+          //  ),
+        //  ),
+      // Container(
+    //        //padding: EdgeInsets.symmetric(vertical: 20, horizontal: 50),
+  //          child: ElevatedButton(
+//              child: Text('Sign in'),
+  //            onPressed: () async {
+    //            //dynamic result = await 
+      //         _auth.signInEmailPass();
+        //       _auth.isSignedIn();
                 //if (result == null) {
                 //  print('error signing in');
                 //} else {
                 //  print('signed in');
                 //  print(result.uid);
                 //}
-              },
-            ),
-          ),
-          Container(
-            //padding: EdgeInsets.symmetric(vertical: 20, horizontal: 50),
-            child: ElevatedButton(
-              child: Text('Sign Out'),
-              onPressed: () async {
-                //dynamic result = await
-                _auth.signEmOut(); 
-                _auth.isSignedIn();
+          //    },
+//            ),
+//          ),
+ //         Container(
+   //         //padding: EdgeInsets.symmetric(vertical: 20, horizontal: 50),
+     //       child: ElevatedButton(
+       //       child: Text('Sign Out'),
+         //     onPressed: () async {
+           //     //dynamic result = await
+             //   _auth.signEmOut(); 
+               // _auth.isSignedIn();
                 //if (result == null) {
                 //  print('error signing in');
                 //} else {
                 //  print('signed in');
                 //  print(result.uid);
                 //}
-              },
-            ),
-          ),
-        ],
-      )
+          //    },
+        //    ),
+      //    ),
+    //    ],
+  //    )
     );
   }
 }
