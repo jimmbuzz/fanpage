@@ -1,6 +1,7 @@
-import 'package:fan_page/services/auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:fan_page/screens/home/home.dart';
 
 class SignIn extends StatefulWidget {
   //const ({ Key? key }) : super(key: key);
@@ -13,7 +14,7 @@ class _SignInState extends State<SignIn> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  final AuthService _auth = AuthService();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   bool isLoading = false;
   //var child;
  // User user = await _auth.instance.signIn
@@ -47,7 +48,7 @@ class _SignInState extends State<SignIn> {
                   if(value!.isEmpty) {
                     return 'Enter Email Address';
                   } else if (!value.contains('@')) {
-                    return 'Enter Email Address';
+                    return 'Enter a valid Email Address';
                   }
                   return null;
                 },
@@ -84,7 +85,8 @@ class _SignInState extends State<SignIn> {
                       setState(() {
                         isLoading = true;
                       });
-                      _auth.signInEmailPass();
+                      //_auth.signInEmailPass();
+                      loginFB();
                     }
                   },
                   child: Text('Submit'),
@@ -148,5 +150,35 @@ class _SignInState extends State<SignIn> {
     //    ],
   //    )
     );
+  }
+  void loginFB() {
+    _auth.signInWithEmailAndPassword(
+      email: emailController.text, 
+      password: passwordController.text
+    ).then((result) {
+      isLoading = false;
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => Home(uid: result.user!.uid)),
+      );
+    }).catchError((err) {
+      print(err.message);
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Error"),
+              content: Text(err.message),
+              actions: [
+                ElevatedButton(
+                  child: Text("Ok"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+            );
+          });
+    });
   }
 }

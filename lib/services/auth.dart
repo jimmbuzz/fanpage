@@ -1,4 +1,4 @@
-import 'package:fan_page/models/appuser.dart';
+/* //import 'package:fan_page/models/appuser.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthService {
@@ -6,10 +6,10 @@ class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   //user obj
-  Appuser? _userFromFirebase(User user) {
-    // ignore: unnecessary_null_comparison
-    return user != null ? Appuser(uid: user.uid) : null;
-  }
+ // Appuser? _userFromFirebase(User user) {
+ //   // ignore: unnecessary_null_comparison
+ //   return user != null ? Appuser(uid: user.uid) : null;
+ // }
 
   //auth change user stream
   //Stream<User> get user {
@@ -74,4 +74,4 @@ class AuthService {
   Future signEmOut() async {
     await _auth.signOut();
   }
-}
+} */
