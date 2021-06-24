@@ -140,11 +140,13 @@ class _EmailSignUpState extends State <EmailSignUp>  {
         password: passwordController.text,
     ).then((result) { 
       _firestore
-      .add({
-        'uid' : result.credential,
+      .doc(_auth.currentUser!.uid).set({
+        'uid' : _auth.currentUser!.uid,
         'email' : emailController.text,
         'firstname': firstNameController.text,
-        'lastname': lastNameController.text, 
+        'lastname': lastNameController.text,
+        'isAdmin': false, 
+        'regDateTime' : DateTime.now(),
       }).then((res) {
         isLoading = false;
         Navigator.pushReplacement (
