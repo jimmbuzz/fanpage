@@ -1,7 +1,3 @@
-//import 'dart:html';
-
-//import 'dart:html';
-
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:fan_page/screens/auth/register.dart';
@@ -14,57 +10,19 @@ class Home extends StatelessWidget {
   //const ({ Key? key }) : super(key: key);
   Home({this.uid});
   final String? uid;
-  
-  //final String title = "Home";
-  
+
   @override
   Widget build(BuildContext context) {
-    //final bool isAdmin = documentSnapshot.get('isAdmin');
     FirebaseAuth _auth = FirebaseAuth.instance;
     print("Debug0"+uid.toString());
     FirebaseFirestore.instance
     .collection('users')
     .doc(_auth.currentUser!.uid)
     .get()
-    //.then((DocumentSnapshot documentSnapshot)) {
-    //  final bool isAdmin = documentSnapshot.get('isAdmin');
-    //}
     .then((DocumentSnapshot documentSnapshot) {
-      
         final bool isAdmin = documentSnapshot.get('isAdmin');
         print("Debug1:"+isAdmin.toString());
-        
     });
-    //final bool isAdmin = documentSnapshot.get('isAdmin');
-    //DocumentReference userRef = _firestoreUser.doc(_auth.currentUser!.uid);
-    //DataSnapshot userData = userRef.get().addSnapshotListener();
-    //Api
-    //DocumentSnapshot userDoc = future.get();
-    //DocumentReference _firestoreMessages = FirebaseFirestore.instance.collection('messages').snapshots();
-
- //   userRef.get().addOnComplete(new OnCompleteListener <DocumentSnapshot>() {
- //     @Override
- //     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
- //       if(task.isSuccessful()) {
- //         DocumentSnapshot userDoc = task.getResult();
-   //       if (userDoc.exists()) {
-    //            Log.d(TAG, "DocumentSnapshot data: " + userDoc.getData());
-    //        } else {
-    //            Log.d(TAG, "No such document");
-    //        }
-    //    } else {
-    //        Log.d(TAG, "get failed with ", task.getException());
-    //    }
-    //  }
-    //});
-    
-    print ("Debug1:"+_auth.currentUser!.uid);
-   // String isAdmin = (String) userRef.get().addListener;
-   // print ("Debug1:");
-    //bool isAdmin = 
-    //print (userRef.get('isAdmin'));
-    //Future result = isAdmin(uid);
-    //print("Debug user: "+currentUser.isAdmin);
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -85,20 +43,22 @@ class Home extends StatelessWidget {
             },
           )
         ]
-        
       ),
       body: Container(
+        constraints: BoxConstraints.expand(),
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("lib/images/IMG_8053.JPG"),
+          )
+        ),
         child: Stack(
           children: [
             adminMessages(),
-            //isAdmin ? Text("Admin") : Text("Not Admin"),
           ],
         )
-        
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Add your onPressed code here!
           _displayTextInputDialog(context);
         },
         child: const Icon(Icons.add),
@@ -112,7 +72,7 @@ class Home extends StatelessWidget {
         .instance
         .collection('messages')
         .orderBy('timeStamp', descending: true)
-        .limit(20)
+        //.limit(20)
         .snapshots(),
         builder: (context, snapshot) {
           if(!snapshot.hasData) {
@@ -135,6 +95,7 @@ class Home extends StatelessWidget {
   }
   
 }
+
 TextEditingController _textFieldController = TextEditingController();
 
 Future<void> _displayTextInputDialog(BuildContext context) async {
@@ -142,20 +103,21 @@ Future<void> _displayTextInputDialog(BuildContext context) async {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('TextField in Dialog'),
+          title: Text('Message Your Fans'),
           content: TextField(
             controller: _textFieldController,
-            decoration: InputDecoration(hintText: "Text Field in Dialog"),
+            decoration: InputDecoration(hintText: "Enter a message..."),
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('CANCEL'),
+              child: Text('CLOSE'),
               onPressed: () {
                 Navigator.pop(context);
+                _textFieldController.clear();
               },
             ),
             TextButton(
-              child: Text('OK'),
+              child: Text('POST'),
               onPressed: () {
                 FirebaseFirestore
                 .instance
@@ -166,6 +128,7 @@ Future<void> _displayTextInputDialog(BuildContext context) async {
                 });
                 print(_textFieldController.text);
                 Navigator.pop(context);
+                _textFieldController.clear();
               },
             ),
           ],
@@ -198,6 +161,23 @@ class MessageBox extends StatelessWidget {
     );
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //class AdminButton extends StatelessWidget {
 //  static const routeName = 'auth-button-view';
  // @override
@@ -212,36 +192,6 @@ class MessageBox extends StatelessWidget {
  //   );
   //}
 //}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //class AuthTabBarScreen extends StatelessWidget {
  // static const routeName = 'auth-tab-bar-view';
   //@override
@@ -293,3 +243,27 @@ class MessageBox extends StatelessWidget {
    // print(documentSnapshot.toString());
   //  return false;
 //}
+
+    //final bool isAdmin = documentSnapshot.get('isAdmin');
+    //DocumentReference userRef = _firestoreUser.doc(_auth.currentUser!.uid);
+    //DataSnapshot userData = userRef.get().addSnapshotListener();
+    //Api
+    //DocumentSnapshot userDoc = future.get();
+    //DocumentReference _firestoreMessages = FirebaseFirestore.instance.collection('messages').snapshots();
+
+ //   userRef.get().addOnComplete(new OnCompleteListener <DocumentSnapshot>() {
+ //     @Override
+ //     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+ //       if(task.isSuccessful()) {
+ //         DocumentSnapshot userDoc = task.getResult();
+   //       if (userDoc.exists()) {
+    //            Log.d(TAG, "DocumentSnapshot data: " + userDoc.getData());
+    //        } else {
+    //            Log.d(TAG, "No such document");
+    //        }
+    //    } else {
+    //        Log.d(TAG, "get failed with ", task.getException());
+    //    }
+    //  }
+    //});
+    
