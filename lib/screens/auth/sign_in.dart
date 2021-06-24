@@ -19,13 +19,12 @@ class _SignInState extends State<SignIn> {
   //var child;
  // User user = await _auth.instance.signIn
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.purple[100],
+      //backgroundColor: Colors.purple[100],
       appBar: AppBar(
-        backgroundColor: Colors.pink[400],
+        backgroundColor: Colors.indigo[400],
         elevation: 0.0,
         title: Text('Sign in to my lame ass app'),
       ),
@@ -57,6 +56,7 @@ class _SignInState extends State<SignIn> {
             Padding(
               padding: EdgeInsets.all(20),
               child: TextFormField(
+                obscureText: true,
                 controller: passwordController,
                 decoration: InputDecoration(
                   labelText: "Enter Password",
@@ -79,7 +79,7 @@ class _SignInState extends State<SignIn> {
               child: isLoading
                 ? CircularProgressIndicator()
                 : ElevatedButton(
-                  style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.lime)),
+                  style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.indigo)),
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       setState(() {
@@ -96,7 +96,46 @@ class _SignInState extends State<SignIn> {
           )
         )
       ),
-      //Row( 
+     
+    );
+  }
+  void loginFB() {
+    _auth.signInWithEmailAndPassword(
+      email: emailController.text, 
+      password: passwordController.text
+    ).then((result) {
+      isLoading = false;
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => Home(uid: result.user!.uid)),
+      );
+    }).catchError((err) {
+      print(err.message);
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Error"),
+              content: Text(err.message),
+              actions: [
+                ElevatedButton(
+                  child: Text("Ok"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+            );
+          });
+    });
+  }
+}
+
+
+
+
+
+ //Row( 
       //  children: <Widget>[
         //  Container(
           //  //padding: EdgeInsets.symmetric(vertical: 20, horizontal: 50),
@@ -149,36 +188,3 @@ class _SignInState extends State<SignIn> {
       //    ),
     //    ],
   //    )
-    );
-  }
-  void loginFB() {
-    _auth.signInWithEmailAndPassword(
-      email: emailController.text, 
-      password: passwordController.text
-    ).then((result) {
-      isLoading = false;
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => Home(uid: result.user!.uid)),
-      );
-    }).catchError((err) {
-      print(err.message);
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text("Error"),
-              content: Text(err.message),
-              actions: [
-                ElevatedButton(
-                  child: Text("Ok"),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                )
-              ],
-            );
-          });
-    });
-  }
-}

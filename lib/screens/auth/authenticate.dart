@@ -16,6 +16,7 @@ class _AuthenticateState extends State<Authenticate> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Register Or Login"),
+        backgroundColor: Colors.indigo[400],
       ),
       body: Center(
           child: Column(mainAxisAlignment: MainAxisAlignment.center, children : <Widget>[
@@ -32,7 +33,7 @@ class _AuthenticateState extends State<Authenticate> {
             Padding(
               padding: EdgeInsets.all(10.0),
                 child: ElevatedButton(
-                    style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.lightBlue)),
+                    style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.indigo)),
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -44,8 +45,21 @@ class _AuthenticateState extends State<Authenticate> {
             ),
             Padding(
               padding: EdgeInsets.all(10.0),
+              child: ElevatedButton(
+                style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.indigo)),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => SignIn()),
+                      );
+                    },
+                    child: Text('Sign in with Google'),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(10.0),
                 child: ElevatedButton(
-                    style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.lightBlue)),
+                    style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.indigo)),
                     onPressed: () {
                       Navigator.push(
                         context,

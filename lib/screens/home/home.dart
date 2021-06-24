@@ -24,7 +24,10 @@ class Home extends StatelessWidget {
         print("Debug1:"+isAdmin.toString());
     });
     return Scaffold(
+      //backgroundColor: Colors.purple[100],
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
+        backgroundColor: Colors.indigo[400],
         automaticallyImplyLeading: false,
         title: Text("Home"),
         actions: <Widget>[
@@ -47,6 +50,7 @@ class Home extends StatelessWidget {
       body: Container(
         constraints: BoxConstraints.expand(),
         decoration: BoxDecoration(
+          shape: BoxShape.circle,
           image: DecorationImage(
             image: AssetImage("lib/images/IMG_8053.JPG"),
           )
@@ -62,7 +66,7 @@ class Home extends StatelessWidget {
           _displayTextInputDialog(context);
         },
         child: const Icon(Icons.add),
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.indigo,
       ),
     );
   }
@@ -77,7 +81,7 @@ class Home extends StatelessWidget {
         builder: (context, snapshot) {
           if(!snapshot.hasData) {
             return Center (
-              child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.blue)));
+              child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.indigo)));
           } else {
             return ListView.builder(
               padding: EdgeInsets.all(10.0),
@@ -148,6 +152,7 @@ class MessageBox extends StatelessWidget {
         top: 8,
         bottom: 8,
       ),
+      
       alignment: Alignment.center,
       child: Text(message,
             textAlign: TextAlign.start,
@@ -155,7 +160,7 @@ class MessageBox extends StatelessWidget {
               color: Colors.black,
               fontSize: 16,
               fontFamily: 'OverpassRegular',
-              fontWeight: FontWeight.w300
+              fontWeight: FontWeight.w500
             )
       ),
     );
@@ -170,7 +175,20 @@ class MessageBox extends StatelessWidget {
 
 
 
-
+// decoration: BoxDecoration(
+//         borderRadius: BorderRadius.only(
+//           topLeft: Radius.circular(23),
+//           topRight: Radius.circular(23),
+//           bottomLeft: Radius.circular(23),
+//           bottomRight: Radius.circular(23),
+//         ),
+//         gradient: LinearGradient(
+//           colors: [
+//             const Color(0x1FC39BD3),
+//             const Color(0x1FC39BD3)
+//           ]
+//           )
+//       ),
 
 
 
