@@ -14,5 +14,5 @@ Clone repository and rename root folder to fan_page. Build with "flutter create 
 ## Admin user feature
 
 A predetermined administrator exists in Fire Auth whose credentials are:
-email: test@g.com
-pass: pppppp
+email: "test@g.com"
+pass: "pppppp"
