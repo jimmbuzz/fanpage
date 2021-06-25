@@ -1,30 +1,17 @@
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:fan_page/screens/auth/register.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fan_page/screens/auth/authenticate.dart';
-import 'package:fan_page/models/user.dart';
 
 class Home extends StatelessWidget {
-  //const ({ Key? key }) : super(key: key);
+
   Home({this.uid});
   final String? uid;
 
   @override
   Widget build(BuildContext context) {
     FirebaseAuth _auth = FirebaseAuth.instance;
-    print("Debug0"+uid.toString());
-    FirebaseFirestore.instance
-    .collection('users')
-    .doc(_auth.currentUser!.uid)
-    .get()
-    .then((DocumentSnapshot documentSnapshot) {
-        final bool isAdmin = documentSnapshot.get('isAdmin');
-        print("Debug1:"+isAdmin.toString());
-    });
     return Scaffold(
-      //backgroundColor: Colors.purple[100],
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: Colors.indigo[400],
@@ -79,15 +66,9 @@ class Home extends StatelessWidget {
           children: [
             adminMessages(),
           ],
-        )
+        ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _displayTextInputDialog(context);
-        },
-        child: const Icon(Icons.add),
-        backgroundColor: Colors.indigo,
-      ),
+      floatingActionButton: adminButtom()
     );
   }
   Widget adminMessages() {
@@ -96,7 +77,6 @@ class Home extends StatelessWidget {
         .instance
         .collection('messages')
         .orderBy('timeStamp', descending: true)
-        //.limit(20)
         .snapshots(),
         builder: (context, snapshot) {
           if(!snapshot.hasData) {
@@ -107,7 +87,6 @@ class Home extends StatelessWidget {
               padding: EdgeInsets.all(10.0),
               itemBuilder: (context, index){
                 DocumentSnapshot data = snapshot.data!.docs[index];
-                print ("Debug2: "+data.get('message').toString());
                 return MessageBox(message: data.get('message'));
               },
               itemCount: snapshot.data!.docs.length,
@@ -117,9 +96,35 @@ class Home extends StatelessWidget {
         },
     );
   }
-  
+  Future<bool> isAdmin() async {
+    final currentUserUid = FirebaseAuth.instance.currentUser!.uid;
+    final DocumentSnapshot docSnap = await FirebaseFirestore.instance.collection('users').doc(currentUserUid).get();
+    return docSnap.get('isAdmin');
+  }
+  Widget adminButtom() {
+    return FutureBuilder(
+      future: isAdmin(),
+        builder: (context, snapshot) {
+          if(!snapshot.hasData) {
+            return Center (
+              child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.indigo)));
+          } else {
+            if (snapshot.data != false) {
+              return  FloatingActionButton(
+                onPressed: () {
+                  _displayTextInputDialog(context);
+                },
+                child: const Icon(Icons.add),
+                backgroundColor: Colors.indigo,
+              );
+            } else {
+              return Container();
+            }
+          }
+        },
+    );
+  }
 }
-
 TextEditingController _textFieldController = TextEditingController();
 
 Future<void> _displayTextInputDialog(BuildContext context) async {
@@ -186,122 +191,3 @@ class MessageBox extends StatelessWidget {
     );
   }
 }
-
-
-
-
-
-
-
-
-
-// decoration: BoxDecoration(
-//         borderRadius: BorderRadius.only(
-//           topLeft: Radius.circular(23),
-//           topRight: Radius.circular(23),
-//           bottomLeft: Radius.circular(23),
-//           bottomRight: Radius.circular(23),
-//         ),
-//         gradient: LinearGradient(
-//           colors: [
-//             const Color(0x1FC39BD3),
-//             const Color(0x1FC39BD3)
-//           ]
-//           )
-//       ),
-
-
-
-
-
-
-
-//class AdminButton extends StatelessWidget {
-//  static const routeName = 'auth-button-view';
- // @override
-//  Widget build(BuildContext context) {
- //   return FutureBuilder(
-  //    future: (context, listen: false).isAdmin(),
-  //    builder: (context, snapshot) => snapshot.hasData 
-  //    ? snapshot.data
-   //     ? Text("Admin!")
-    //    : Text("Not Admin")
-//      : Text("Loading"),
- //   );
-  //}
-//}
-//class AuthTabBarScreen extends StatelessWidget {
- // static const routeName = 'auth-tab-bar-view';
-  //@override
-  //Widget build(BuildContext context) {
-   // return FutureBuilder(
-    //  future: Provider.of<Auth>(context, listen: false).isAdmin(),
- //     builder: (context, snapshot) => snapshot.hasData
- //         ? snapshot.data // if isAdmin() is true
- //             ? AdminTabBarScreen() // return Admin
- //             : UserTabBarScreen() // else if false, return UserTab
-  //        : Loading(), // while you're waiting for the data, show some kind of loading indicator
-  //  );
- // }
-//}
-//Future<bool> isAdmin(String? userID) async {
-    //bool fuckinAdmin = false;
-    //FirebaseFirestore.instance
-    //.collection('users')
-    //.doc(userID)
-    //.get()
-    //.then((DocumentSnapshot documentSnapshot) {
-    //  if(documentSnapshot.exists) {
-    //    //bool isAdmin = documentSnapshot.get('isAdmin');
-    //    
-    //    fuckinAdmin = documentSnapshot.get('isAdmin');
-    //    print("Debug4:"+fuckinAdmin.toString());
-    //    return fuckinAdmin;
-    //    
-      // //else {
-        //final bool isAdmin = false;
-        
-       // print("Debug1: document does not exist");
-      //  return false;
-     // }
-    //});
-    //print("Debug: THIS SHOULD NOT PRINT");
-    //return fuckinAdmin;
-    
-    
-    //final currentUserUid = _auth.currentUser!.uid;
-    //What I'm trying to do here is get my isAdmin field which is created when a user is created
-    //final DocumentSnapshot db = await 
-    //      databaseReference.collection('users').doc(currentUserUid).get();
-    //return db.data().containsKey('isAdmin');
-   // FirebaseAuth _auth = FirebaseAuth.instance;
-   // final currentUserUid = _auth.currentUser!.uid;
-   // print ("Debug 5: " + currentUserUid);
-   // final DocumentSnapshot documentSnapshot = FirebaseFirestore.instance.collection('users').doc(currentUserUid) as DocumentSnapshot<Object?>;
-   // print(documentSnapshot.toString());
-  //  return false;
-//}
-
-    //final bool isAdmin = documentSnapshot.get('isAdmin');
-    //DocumentReference userRef = _firestoreUser.doc(_auth.currentUser!.uid);
-    //DataSnapshot userData = userRef.get().addSnapshotListener();
-    //Api
-    //DocumentSnapshot userDoc = future.get();
-    //DocumentReference _firestoreMessages = FirebaseFirestore.instance.collection('messages').snapshots();
-
- //   userRef.get().addOnComplete(new OnCompleteListener <DocumentSnapshot>() {
- //     @Override
- //     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
- //       if(task.isSuccessful()) {
- //         DocumentSnapshot userDoc = task.getResult();
-   //       if (userDoc.exists()) {
-    //            Log.d(TAG, "DocumentSnapshot data: " + userDoc.getData());
-    //        } else {
-    //            Log.d(TAG, "No such document");
-    //        }
-    //    } else {
-    //        Log.d(TAG, "get failed with ", task.getException());
-    //    }
-    //  }
-    //});
-    

@@ -6,10 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:fan_page/screens/home/home.dart';
 
-//import 'package:flutter_signin_button/flutter_signin_button.dart';
-
 class Authenticate extends StatefulWidget {
-  //const ({ Key? key }) : super(key: key);
 
   @override
   _AuthenticateState createState() => _AuthenticateState();
@@ -18,9 +15,9 @@ class Authenticate extends StatefulWidget {
 class _AuthenticateState extends State<Authenticate> {
   @override
 
-  late User _user;
+
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
+
   CollectionReference _firestore = FirebaseFirestore.instance.collection('users'); 
 
   Widget build(BuildContext context) {
@@ -73,7 +70,7 @@ class _AuthenticateState extends State<Authenticate> {
                         MaterialPageRoute(builder: (context) => SignIn()),
                       );
                     },
-                    child: Text('Login With Email'),
+                    child: Text('Sign in with Email'),
                   ),
             ),
           ]),
@@ -94,7 +91,6 @@ class _AuthenticateState extends State<Authenticate> {
       idToken: googleAuth.idToken,
     );
     
-    
     _auth.signInWithCredential(credential).then((result) {
       //check if user has data in firestore and if not create it
         _firestore.doc(_auth.currentUser!.uid).get()
@@ -113,7 +109,6 @@ class _AuthenticateState extends State<Authenticate> {
             }
           }
         );
-      print("Debug: "+_auth.currentUser!.email.toString());
       Navigator.pushReplacement (
           context,
           MaterialPageRoute(builder: (context) => Home(uid: result.user!.uid)),
