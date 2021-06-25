@@ -22,7 +22,6 @@ class _AuthenticateState extends State<Authenticate> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   CollectionReference _firestore = FirebaseFirestore.instance.collection('users'); 
-  //FirebaseFirestore db = FirebaseFirestore.instance;
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +36,6 @@ class _AuthenticateState extends State<Authenticate> {
               child: Text("Fan Page",
                 style: TextStyle (
                   fontWeight: FontWeight.bold,
-                  //fontFamily: 'Comic_Sans',
                   fontSize: 30,
                 )  
               ) 
@@ -96,71 +94,30 @@ class _AuthenticateState extends State<Authenticate> {
       idToken: googleAuth.idToken,
     );
     
-    //print ("Debug"+credential.asMap().toString());
-    //credential.accessToken;
-    // Once signed in, return the UserCredential
-    //UserCredential userCred = await FirebaseAuth.instance.signInWithCredential(credential);
-    //print (userCred.additionalUserInfo);
+    
     _auth.signInWithCredential(credential).then((result) {
-
-
-
-      //DocumentReference docRef = db.collection("users").doc(_auth.currentUser!.uid);
-      FutureBuilder<DocumentSnapshot> (
-        future: _firestore.doc(_auth.currentUser!.uid).get(),
-        builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-          if (snapshot.hasError) {
-            return Text("Something went wrong");
+      //check if user has data in firestore and if not create it
+        _firestore.doc(_auth.currentUser!.uid).get()
+          .then((DocumentSnapshot docSnapshot) {
+            if(docSnapshot.exists) {
+               print("User has data!");
+            } else {
+              print("Creating user data");
+              _firestore.doc(_auth.currentUser!.uid).set({
+                'uid' : _auth.currentUser!.uid,
+                'email' : _auth.currentUser!.email,
+                'firstname' : _auth.currentUser!.displayName,
+                'isAdmin': false, 
+                'regDateTime' : DateTime.now(),
+              });
+            }
           }
-          if (snapshot.hasData && !snapshot.data!.exists) {
-            print("No user data");
-            _firestore.doc(_auth.currentUser!.uid).set({
-              'uid' : _auth.currentUser!.uid,
-              'email' : _auth.currentUser!.email,
-              'firstname' : _auth.currentUser!.displayName,
-              'isAdmin': false, 
-              'regDateTime' : DateTime.now(),
-            });
-            return Text("No user data");
-          }
-          if (snapshot.connectionState == ConnectionState.done) {
-            return Text("Data!");
-          }
-          return Text("loading");
-        },
-      ); 
-
-
+        );
       print("Debug: "+_auth.currentUser!.email.toString());
       Navigator.pushReplacement (
           context,
           MaterialPageRoute(builder: (context) => Home(uid: result.user!.uid)),
         );
-    });//.then((res) {
-      
-   //});
-    //UserCredential result = _auth.currentUser;
-    
-    //if (_firestore.doc(_auth.currentUser!.uid).exists())
-    //DocumentReference userDocRef = _firestore.doc(_auth.currentUser!.uid);
-   // userDocRef.get().then((docData) => {
-   //   if (docData.exists) {
-  //  //     print("This user already has data")
-  //     } else {
-  //       print("This user needs data")
-  //     }
-  //   }).catchError((err) => {
-  //     print(err)
-  //   });
-  //   Navigator.pushReplacement (
-  //         context,
-  //         MaterialPageRoute(builder: (context) => Home(uid: result.user!.uid)),
-  //   );
-    //const doc = await userDocRef.get() 
-    //.then(doc => {
-
-   //}
-   // );
-    
+    });
   }
 }

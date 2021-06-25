@@ -63,12 +63,6 @@ class Home extends StatelessWidget {
                   ],
                 );
               });
-             // _auth.signOut().then((res) {
-             //   Navigator.pushAndRemoveUntil(
-            //      context,
-            //      MaterialPageRoute(builder: (context) => Authenticate()),
-            //      (Route<dynamic> route) => false);
-            //  });
             },
           )
         ]
@@ -168,7 +162,7 @@ Future<void> _displayTextInputDialog(BuildContext context) async {
   }
 //@override
 class MessageBox extends StatelessWidget {
-  final String message;// = "placeholder";
+  final String message;
 
   MessageBox({required this.message});
 
