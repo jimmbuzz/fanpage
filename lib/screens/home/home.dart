@@ -37,12 +37,38 @@ class Home extends StatelessWidget {
               color: Colors.amber,
             ),
             onPressed: () {
-              _auth.signOut().then((res) {
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => Authenticate()),
-                  (Route<dynamic> route) => false);
+              showDialog(context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  content: Text("Sign Out?"),
+                  actions: [
+                    TextButton(
+                      child: Text("Proceed"),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        _auth.signOut().then((res) {
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder: (context) => Authenticate()),
+                          (Route<dynamic> route) => false);
+                        });
+                      },
+                    ),
+                    TextButton(
+                      child: Text("Cancel"),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    )
+                  ],
+                );
               });
+             // _auth.signOut().then((res) {
+             //   Navigator.pushAndRemoveUntil(
+            //      context,
+            //      MaterialPageRoute(builder: (context) => Authenticate()),
+            //      (Route<dynamic> route) => false);
+            //  });
             },
           )
         ]
